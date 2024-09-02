@@ -1,4 +1,6 @@
 
+message(STATUS "Configuring unit tests")
+
 set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
 set(GTEST_LINK_LIBS 
@@ -6,64 +8,41 @@ set(GTEST_LINK_LIBS
 )
 
 if(UNIX)
-message("DSDSDSD")
-  set(GTEST_LINK_LIBS 
-    ${GTEST_BOTH_LIBRARIES}
+  set(PTHREAD_LIB
     pthread
   )
+elseif(WIN32)
+  set(PTHREAD_LIB)
 endif()
 
-add_executable(test-geometry test_geometry.cpp)
-target_include_directories(test-geometry 
-  PUBLIC 
-    ${GTEST_INCLUDE_DIRS}
-    ${TARGET_INCLUDE_DIR}
-)
+macro(configure_test TEST_NAME SRC_FILE)
+  message(STATUS "Configuring ${TEST_NAME}")
 
-set_target_properties(test-geometry PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(test-geometry
-  PUBLIC
-    ${GTEST_BOTH_LIBRARIES}
-    ti-geometry
-)
+  add_executable(${TEST_NAME} ${SRC_FILE})
+  set(LINK_LIBS ${ARGN}) # libs for target_link_libraries
+  message("Libraries linked to '${TEST_NAME}' test: ${LINK_LIBS}")
+  target_include_directories(${TEST_NAME} 
+    PUBLIC 
+      ${GTEST_INCLUDE_DIRS}
+      ${TARGET_INCLUDE_DIR}
+  )
+  
+  target_link_libraries(${TEST_NAME}
+    PUBLIC
+      ${LINK_LIBS}
+      ${GTEST_BOTH_LIBRARIES}
+      ${PTHREAD_LIB}
+  )
 
-gtest_discover_tests(test-geometry WORKING_DIRECTORY ${INSTALL_TESTS_DIR})
-install(TARGETS test-geometry DESTINATION ${INSTALL_TESTS_DIR})
+  gtest_discover_tests(${TEST_NAME} WORKING_DIRECTORY ${INSTALL_TESTS_DIR})
+  install(TARGETS ${TEST_NAME} DESTINATION ${INSTALL_TESTS_DIR})
 
-add_executable(test-algorithms test_algorithms.cpp)
-target_include_directories(test-algorithms 
-  PUBLIC
-    ${GTEST_INCLUDE_DIRS}
-    ${TARGET_INCLUDE_DIR}
-)
+  message(STATUS "Configuring ${TEST_NAME} - Done")
+endmacro()
 
-set_target_properties(test-algorithms PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(test-algorithms
-  PUBLIC
-    ${GTEST_BOTH_LIBRARIES}
-    ti-geometry
-    ti-algorithms
-)
-
-gtest_discover_tests(test-algorithms WORKING_DIRECTORY ${INSTALL_TESTS_DIR})
-install(TARGETS test-algorithms DESTINATION ${INSTALL_TESTS_DIR})
-
-add_executable(test-io test_io.cpp)
-target_include_directories(test-io 
-  PUBLIC
-    ${GTEST_INCLUDE_DIRS}
-    ${TARGET_INCLUDE_DIR}
-)
-
-set_target_properties(test-io PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(test-io
-  PUBLIC
-    ${GTEST_BOTH_LIBRARIES}
-    ti-geometry
-    ti-io
-)
-
-gtest_discover_tests(test-io WORKING_DIRECTORY ${INSTALL_TESTS_DIR})
-install(TARGETS test-io DESTINATION ${INSTALL_TESTS_DIR})
+configure_test(test-geometry test_geometry.cpp ti-geometry)
+configure_test(test-algorithms test_algorithms.cpp ti-geometry ti-algorithms)
+configure_test(test-io test_io.cpp ti-geometry ti-io)
 
 
+message(STATUS "Configuring unit tests - Done")

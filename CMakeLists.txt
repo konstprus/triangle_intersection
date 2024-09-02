@@ -5,8 +5,8 @@ project (triangle_intersection)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(BUILD_UNITTESTS  "Build unitests. Googletest is reguired" ON)
-option(BUILD_EXECUTABLE "Build cli executable"                   ON)
+option(BUILD_UNITTESTS  "Build unit tests. Googletest is reguired" ON)
+option(BUILD_EXECUTABLE "Build cli executable"                     ON)
 
 set(INSTALL_INCLUDES_DIR ${CMAKE_INSTALL_PREFIX}/include)
 set(INSTALL_LIBS_DIR     ${CMAKE_INSTALL_PREFIX}/lib)
@@ -14,6 +14,7 @@ set(INSTALL_TESTS_DIR    ${CMAKE_INSTALL_PREFIX}/tests)
 set(INSTALL_EXE_DIR      ${CMAKE_INSTALL_PREFIX}/bin)
 set(TARGET_INCLUDE_DIR   ${CMAKE_CURRENT_SOURCE_DIR})
 
+message(STATUS "Configuring ti-geometry lib")
 set(LIB_GEOMETRY_HDR_FILES 
   base3d.h
   point3d.h
@@ -34,7 +35,9 @@ add_library(ti-geometry STATIC
   ${LIB_GEOMETRY_HDR_FILES}
   ${LIB_GEOMETRY_SRC_FILES}
 )
+message(STATUS "Configuring ti-geometry lib - Done")
 
+message(STATUS "Configuring ti-algorithms lib")
 set(LIB_ALGORITHMS_HDR_FILES
   intersection_algorithms.h
 )
@@ -47,8 +50,10 @@ add_library(ti-algorithms STATIC
   ${LIB_ALGORITHMS_HDR_FILES}
   ${LIG_ALGORITHMS_SRC_FILES}
 )
-target_link_libraries(ti-algorithms PRIVATE ti-geometry)
+target_link_libraries(ti-algorithms PUBLIC ti-geometry)
+message(STATUS "Configuring ti-algorithms lib - Done")
 
+message(STATUS "Configuring ti-io lib")
 set(LIB_IO_HDR_FILES
   geometry_io.h
 )
@@ -61,17 +66,20 @@ add_library(ti-io STATIC
   ${LIB_IO_HDR_FILES}
   ${LIG_IO_SRC_FILES}
 )
-target_link_libraries(ti-algorithms PRIVATE ti-geometry)
-
+target_link_libraries(ti-io PUBLIC ti-geometry)
+message(STATUS "Configuring ti-io lib - Done")
 
 if(BUILD_EXECUTABLE)
+  message(STATUS "Configuring ti-checker executable")
   add_executable(ti-checker main.cpp)
   target_link_libraries(ti-checker PRIVATE ti-geometry ti-algorithms ti-io)
+  message(STATUS "Configuring ti-checker executable - Done")
 endif()
 
 if(BUILD_UNITTESTS)
-  find_package(GTest REQUIRED)
+  message(STATUS "Build unit tests in ON")
   enable_testing()
+  find_package(GTest REQUIRED)
   add_subdirectory(tests)
   include(GoogleTest)
 endif()
