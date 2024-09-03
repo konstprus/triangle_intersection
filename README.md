@@ -78,7 +78,7 @@ ____
 
 The project is built using [Cmake](https://cmake.org)(version 3.23 or newer).\
 CMakeLists.txt has two options:
-* `BUILD_UNITTESTS` - options allows you to build unit-test. For building unit-tests [GooglTest](https://github.com/google/googletest.git) is required.
+* `BUILD_UNITTESTS` - options allows you to build unit-test. For building unit-tests [GoogleTest](https://github.com/google/googletest.git) is required.
 By default this option is `ON`.
 * `BUILD_EXECUTABLE` - options allows you to build console application. If you want use only libraries and you
 don't need to build executable you can set it `OFF`. By default this option is `ON`.
