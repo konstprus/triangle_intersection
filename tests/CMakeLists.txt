@@ -44,5 +44,4 @@ configure_test(test-geometry test_geometry.cpp ti-geometry)
 configure_test(test-algorithms test_algorithms.cpp ti-geometry ti-algorithms)
 configure_test(test-io test_io.cpp ti-geometry ti-io)
 
-
 message(STATUS "Configuring unit tests - Done")

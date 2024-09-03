@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.16)
+﻿cmake_minimum_required (VERSION 3.23)
 
 project (triangle_intersection)
 
@@ -77,7 +77,7 @@ if(BUILD_EXECUTABLE)
 endif()
 
 if(BUILD_UNITTESTS)
-  message(STATUS "Build unit tests in ON")
+  message(STATUS "Build unit tests is ON")
   enable_testing()
   find_package(GTest REQUIRED)
   add_subdirectory(tests)
@@ -100,4 +100,5 @@ install(TARGETS ${INSTALL_LIBS} LIBRARY DESTINATION ${INSTALL_LIBS_DIR})
 install(FILES ${INSTALL_HDR_FILES} DESTINATION ${INSTALL_INCLUDES_DIR})
 if(BUILD_EXECUTABLE)
   install(TARGETS ti-checker DESTINATION ${INSTALL_EXE_DIR})
+  install(DIRECTORY examples DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()

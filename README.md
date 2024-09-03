@@ -6,7 +6,7 @@ ____
 
 # Project structure
 
-![project_structure_graph](/images/project _structure_graph.png)
+![project_structure_graph](/images/project_structure_graph.png)
 
 The project consists of three static libraries 'ti-geometry', 'ti-algorithms' and 'ti-io' and also
 one executable 'ti-checker'. The libraries are covered by unit tests 'test-geometry', 
