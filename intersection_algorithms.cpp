@@ -202,7 +202,7 @@ bool IsIntersect(const Segment3D& segment1, const Segment3D& segment2) {
     }
     return IsIntersect(segment1, segment2, au);
   }
-  if (Cross(n, au).IsZero()) {
+  if (!Cross(n, au).IsZero()) {
     // Segments are skew. They cannot intersect
     return false;
   }
