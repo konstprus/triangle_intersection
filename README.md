@@ -1,5 +1,8 @@
 # Triangle Intersection
 
+| Github workflow | ![Build and Test](https://github.com/PrusC/triangle_intersection/actions/workflows/build_and_test.yml/badge.svg)|
+| --------------- |--------------- |
+
 A pair or triangles is given as list of their vertices coordinates in three-dimensional space. 
 Implemented algorithms checks whether triangles are intersecting or not.
 ____
